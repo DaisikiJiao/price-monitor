@@ -23,14 +23,6 @@ public class Connector {
     private static Logger logger = LoggerFactory.getLogger(Connector.class);
     private WebSocketClient client;
 
-    public static String KLINE = "market.%s.kline.%s";
-    public static String DEPTH = "market.%s.depth.%s";
-    public static String TRADE = "market.%s.trade.detail";
-    public static String DETAIL = "market.%s.detail";
-    public static String TICKERS = "market.tickers";
-    public static String PERIOD[] = {"1min", "5min", "15min", "30min", "60min", "4hour", "1day", "1mon", "1week", "1year"};
-    public static String TYPE[] = {"step0", "step1", "step2", "step3", "step4", "step5", "percent10"};
-
     @PostConstruct
     public void connect() {
         try {

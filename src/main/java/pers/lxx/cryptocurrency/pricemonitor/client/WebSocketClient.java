@@ -8,6 +8,7 @@ import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pers.lxx.cryptocurrency.pricemonitor.engine.TickEngine;
 import pers.lxx.cryptocurrency.pricemonitor.utils.ZipUtil;
 
 import java.net.URI;
@@ -53,18 +54,19 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient {
         try {
             String message = new String(ZipUtil.decompress(bytes.array()), "UTF-8");
             JSONObject jsonObjectMessage = JSON.parseObject(message);
-            if (message.indexOf("ping") > 0) {
+            if (jsonObjectMessage.get("ping")!=null) {
                 logger.info("心跳检测："+message);
                 send(message.replace("ping", "pong"));
             }else
 
-            if (message.indexOf("subbed") > 0&&jsonObjectMessage.get("status").equals("ok")) {
+            if (jsonObjectMessage.get("subbed")!=null&&jsonObjectMessage.getString("status").equals("ok")) {
                 logger.info("订阅成功："+jsonObjectMessage.get("subbed"));
             }else
 
-            if (message.indexOf("tick") > 0) {
+            if (jsonObjectMessage.get("ch")!=null) {
 //                logger.info("当前行情："+jsonObjectMessage.get("tick").toString());
-                logger.info(message);
+//                logger.info(message);
+                TickEngine.tickHandle(jsonObjectMessage);
             }
         } catch (Exception e) {
             e.printStackTrace();
